@@ -32,8 +32,12 @@
             <td>{{this.Email}}</td>
 
             <td>
-              <a href="#" class="btn btn-warning">Block</a>
-
+              {{#if this.Access}}
+              {{!-- <a href="#" class="btn btn-warning">Block</a> --}}
+              <a href="/admin/block-user/{{this._id}}" class="btn btn-success">Block</a>
+              {{else}}
+            <a href="/admin/unblock-user/{{this._id}}" class="btn btn-danger delete"  >Unblock</a>
+              {{/if}}
             </td>
           </tr>
         {{/each}}

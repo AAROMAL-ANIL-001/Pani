@@ -8,6 +8,7 @@ router.get("/", function (req, res, next) {
   // productHelpers.getAllProducts().then((products) => {
   res.render("admin/login",{layout:false});
   // });
+
 });
 router.get("/products", function (req, res, next) {
   if (req.session.admin) {
@@ -95,5 +96,19 @@ router.post("/edit-product/:id", (req, res) => {
     }
   }); 
 });  
+
+router.get('/block-user/:id',(req,res)=>{
+  let userId=req.params.id
+  productHelpers.blockUser(userId).then((response)=>{
+    res.redirect('/admin/users')
+  })
+})
+
+router.get('/unblock-user/:id',(req,res)=>{
+  let userId=req.params.id
+  productHelpers.unBlockUser(userId).then((response)=>{
+    res.redirect('/admin/users')
+  })
+})
 
 module.exports = router;

@@ -8,12 +8,13 @@
   "dependencies": {
     "bcrypt": "^5.1.0",
     "cookie-parser": "~1.4.4",
+    "crypto": "^1.0.1",
     "debug": "~2.6.9",
     "express": "~4.16.1",
     "express-fileupload": "^1.4.0",
     "express-handlebars": "^6.0.6",
     "express-session": "^1.17.3",
-    "fast-two-sms": "^2.0.3",
+    "fast-two-sms": "^3.0.0",
     "hbs": "^4.2.0",
     "http-errors": "~1.6.3",
     "mongodb": "^4.11.0",
@@ -21,7 +22,7 @@
     "nocache": "^3.0.4",
     "nodemon": "^2.0.20",
     "razorpay": "^2.8.3",
-    "sweetalert2": "^11.6.8"
+    "sweetalert2": "^11.4.8"
   },
   "devDependencies": {
     "handlebars": "^4.5.0"

@@ -28,8 +28,9 @@ router.get("/login", (req, res) => {
   if (req.session.user) {
     res.redirect("/");
   } else {
-    res.render("user/login", { loginErr: req.session.userLoginErr });
-    req.session.userLoginErr = false;
+    res.render("user/login", { "loginErr": req.session.loginErr ,"Accesserr":req.session.Accesserr});
+    req.session.loginErr = false;
+    req.session.Accesserr = false;
   }
 });
 router.get("/signup", (req, res) => {
@@ -61,14 +62,20 @@ router.post("/otp", (req, res) => {
 });
 router.post("/login", (req, res) => {
   userHelpers.doLogin(req.body).then((response) => {
-    if (response.status) {
-      req.session.user = response.user;
-      req.session.userLoggedIn = true;
-      res.redirect("/");
-    } else {
-      req.session.userLoginErr = "Invalid username or password";
-      res.redirect("/login");
+    if(!response.status){
+      req.session.loginErr="Invalid entries"
+      res.redirect("/login")
     }
+    else if (!response.user.Access){
+      req.session.Accesserr="You are BLOCKED"
+      res.redirect('/login')
+    }else{
+      req.session.userLoggedIn = true;
+      req.session.user = response.user;
+      
+      res.redirect("/");
+    }
+  
   });
 });
 router.get("/logout", (req, res) => {
@@ -80,18 +87,16 @@ router.get("/logout", (req, res) => {
 
 router.get("/cart", verifyLogin, async(req, res) => {
   let products = await userHelpers.getCartProducts(req.session.user._id)
-  // let totalValue=0
-  //if(products.length>0){
+  let totalValue=0
+  if(products.length>0){
     let totalValue = await userHelpers.getTotalAmount(req.session.user._id)
-  //}
+  }
   let users= req.session.user
-  // let cartCount = null
-  // if(req.session.user){
-  //   cartCount =await userHelpers.getCartCount(req.session.user._id)
-  // }
+  
+  
   let cartCount =await userHelpers.getCartCount(req.session.user._id)
   const userId = users._id;
-  res.render("user/cart",{products,userId,totalValue,cartCount});
+  res.render("user/cart",{ users,products,userId,totalValue,cartCount});
 });
 
 router.get("/add-to-cart/:id", (req, res) => {
@@ -152,6 +157,7 @@ router.get('/view-order-products/:id',async(req,res)=>{
   res.render('user/view-order-products',{user:req.session.user,products})
 })
 router.post('/verify-payment',(req,res)=>{
+  console.log("lilululu");
   console.log(req.body)
   userHelpers.verifyPayment(req.body).then(()=>{
     userHelpers.changePaymentStatus(req.body['order[receipt]']).then(()=>{

@@ -64,8 +64,12 @@
                   </div>
 
                   {{#if loginErr}}
-                <p class="error text-danger" >{{lo}}</p>
+                <p class="error text-danger" >{{loginErr}}</p>
                 {{/if}}
+                {{#if Accesserr}}
+                <p class="error text-danger" >{{Accesserr}}</p>
+                {{/if}}
+
 
                   <h5 class="fw-normal mb-3 pb-3" style="letter-spacing: 1px;">Sign into your account</h5>
 

@@ -16,7 +16,14 @@ module.exports = {
       console.log("pooo", userData.Password);
       db.get()
         .collection(collection.USER_COLLECTION)
-        .insertOne(userData)
+        .insertOne(userData={
+          Name:userData.Name,
+          Email:userData.Email,
+          Password:userData.Password,
+          Phone:userData.Phone,
+          Access:true
+
+        })
         .then((data) => {
           resolve(data.insertedId._id);
           // console.log(data)
@@ -385,17 +392,17 @@ generateRazorpay:(orderId,total)=>{
     });
   })
 },
-verifyPayment:(details)=>{
-  return new Promise((resolve,reject)=>{
-    const crypto = require('crypto');
-    let hmac = crypto.createHmac('sha256','n6pADyjpXKzs7DSL6lB8CHx1')
-    hmac.update(details['payment[razorpay_order_id']+'|'+details['payment[razorpay_payment_id]'])
-    hmac=hmac.digest('hex')
-    if(hmac==details['payment[razorpay_signature]']){
-      resolve()
-    }else{
-      reject()
-    }
+verifyPayment: (details) => {
+  return new Promise((resolve, reject) => {
+      const crypto = require('crypto')
+      let hmac = crypto.createHmac('sha256', 'n6pADyjpXKzs7DSL6lB8CHx1')
+      hmac.update(details['payment[razorpay_order_id]'] + '|' + details['payment[razorpay_payment_id]'])
+      hmac = hmac.digest('hex')
+      if (hmac == details['payment[razorpay_signature]']) {
+          resolve()
+      } else {
+          reject()
+      }
   })
 },
 changePaymentStatus:(orderId)=>{
@@ -404,7 +411,7 @@ changePaymentStatus:(orderId)=>{
     .updateOne({_id:objectId(orderId)},
     {
       $set:{
-        status:'placed'
+        status:'placed' 
       }
     }).then(()=>{
       resolve()
