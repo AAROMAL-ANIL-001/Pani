@@ -13,10 +13,12 @@ const verifyLogin = (req, res, next) => {
 
 /* GET home page. */
 router.get("/",async function (req, res, next) {
+  console.log("Blablabla")
   let user = req.session.user;
   console.log(user);
   let cartCount = null
   if(req.session.user){
+    console.log("Blablabla")
     cartCount=await userHelpers.getCartCount(req.session.user._id)
   }
   
@@ -30,7 +32,7 @@ router.get("/login", (req, res) => {
   } else {
     res.render("user/login", { "loginErr": req.session.loginErr ,"Accesserr":req.session.Accesserr});
     req.session.loginErr = false;
-    req.session.Accesserr = false;
+    req.session.Accesserr = false;  
   }
 });
 router.get("/signup", (req, res) => {
@@ -170,13 +172,20 @@ router.post('/verify-payment',(req,res)=>{
   })
 })
  
-router.get('/product-detail/:id',async (req,res)=>{
-  const id = req.params.id
+router.get('/product-detail/:id', (req,res)=>{
+  const id = req.params
+  console.log(id); 
+  console.log(id);
+  console.log(id);
+  console.log(id);
+  console.log(id);
   console.log(id);
  productHelpers.getSingleProducts(id).then((product) => {
+  console.log("ajshdgj")
+  console.log(product)
   res.render('user/product-detail',{product})
    })
-})
+}) 
 
 router.post('/remove-cart-product',(req,res)=>{
   userHelpers.removeCartProduct(req.body).then((response)=>{

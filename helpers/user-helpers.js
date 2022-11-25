@@ -22,7 +22,6 @@ module.exports = {
           Password:userData.Password,
           Phone:userData.Phone,
           Access:true
-
         })
         .then((data) => {
           resolve(data.insertedId._id);
