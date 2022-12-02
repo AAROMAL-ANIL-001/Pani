@@ -21,6 +21,9 @@ module.exports = {
           Email:userData.Email,
           Password:userData.Password,
           Phone:userData.Phone,
+          Address:userData.Address,
+          State:userData.State,
+          Pincode:userData.Pincode,
           Access:true
         })
         .then((data) => {
@@ -429,5 +432,141 @@ removeCartProduct:(details)=>{
       resolve(response)
      })
   })
-}
+},
+removeWishProduct:(details)=>{
+  console.log(details)
+  return new Promise((resolve,reject)=>{
+     db.get().collection(collection.WISHLIST_COLLECTION)
+     .updateOne({_id:objectId(details.wish)},
+     {
+      $pull:{products:{item:objectId(details.product)}}
+     }
+     ).then((response)=>{
+      resolve(response)
+     })
+  })
+},
+
+
+  editUserProfile:(userId,userDetails)=>{
+    return new Promise((resolve,reject)=>{
+        db.get().collection(collection.USER_COLLECTION).updateOne({_id:objectId(userId)},{
+            $set:{
+                Phone:userDetails.Phone,
+                Address:userDetails.Address,
+                State:userDetails.State,
+                Pincode:userDetails.Pincode,
+            }
+        }).then((response)=>{
+            resolve(response)
+            console.log("uog",response)
+        })
+    })
+},
+addToWishlist:(proid,userId)=>{
+  let proObj={
+    item:objectId(proid),
+    quantity:1
+  }
+  return new Promise(async(resolve,reject)=>{
+      let userCart=await db.get().collection(collection.WISHLIST_COLLECTION).findOne({user:objectId(userId)})
+      if(userCart){
+             let proExist=userCart.products.findIndex(product=>product.item==proid)
+             console.log(proExist)
+             if(proExist!=-1){
+              db.get().collection(collection.WISHLIST_COLLECTION)
+              .updateOne({user:objectId(userId),'products.item':objectId(proid)},
+                 {
+                   $inc:{'products.$.quantity':1}
+                 }
+              ).then(()=>{
+                  resolve()
+              })
+
+             }else{
+            
+            db.get().collection(collection.WISHLIST_COLLECTION).updateOne({user:objectId(userId)},
+           {
+            
+              $push:{products:proObj}
+            
+           }
+           ).then((response)=>{
+            resolve(response)
+           })
+          }
+      }else{
+        let cartObj={
+          user:objectId(userId),
+          products:[proObj]
+        }
+        db.get().collection(collection.WISHLIST_COLLECTION).insertOne(cartObj).then((response)=>{
+          resolve(response)
+        })
+      }
+
+  })
+},
+getWishlistProducts:(userId)=>{
+        return new Promise(async(resolve,reject)=>{
+                let cartItems=await db.get().collection(collection.WISHLIST_COLLECTION).aggregate([
+                  {
+                     $match:{user:objectId(userId)}
+                },
+                {
+                  $unwind:'$products'
+
+                },
+                {
+                  $project:{
+                    item:'$products.item',
+                    quantity:'$products.quantity'
+                  }
+                },
+                {
+                  $lookup:{
+                    from:collection.PRODUCT_COLLECTION,
+                    localField:'item',
+                    foreignField:'_id',
+                    as:'product'
+                  }
+                },
+                {
+                  $project:{
+                    item:1,quantity:1,
+                    product:{$arrayElemAt:['$product',0]}
+                  }
+                }
+         
+              ]).toArray()
+              console.log(cartItems)
+              resolve(cartItems)
+
+        })
+        
+      },
+
+      getWishCount:(userId)=>{
+        let count=0
+        return new Promise(async(resolve,reject)=>{
+          let wishlist=await db.get().collection(collection.WISHLIST_COLLECTION).findOne({user:objectId(userId)})
+          if(wishlist){
+              count=wishlist.products.length
+          }
+          resolve(count)
+        })
+      },
+      deleteWishQuantity:(details)=>{
+         
+        return new Promise((resolve,reject)=>{
+          db.get().collection(collection.WISHLIST_COLLECTION)
+          .updateOne({_id:objectId(details.wishlist)},
+            {
+              $pull:{products:{item:objectId(details.product)}}
+            }
+          ).then((response)=>{
+              resolve(response)
+          })
+      })
+    }
 }

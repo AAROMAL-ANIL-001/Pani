@@ -52,6 +52,16 @@ router.get("/users", function (req, res, next) {
   });
 });
 
+router.get("/orders", function (req, res, next) {
+  productHelpers.getAllOrders().then((orders) => {
+    res.render("admin/orders.hbs", {
+      admin: true,
+      orders,
+      layout: "layout1",
+    });
+  });
+});
+
 router.get("/add-product", function (req, res) {
   res.render("admin/add-product", { admin: true, layout: "layout1" });
 });
@@ -111,4 +121,35 @@ router.get('/unblock-user/:id',(req,res)=>{
   })
 })
 
+router.get('/add-coupon',function(req,res){
+  res.render('admin/add-coupon',{admin:true,layout:"layout1"})
+})
+
+router.post('/add-coupon',(req,res)=>{
+
+  console.log(req.body);
+
+  
+productHelpers.addCoupon(req.body,(id)=>{
+// let image=req.files.image
+// image.mv('./public/product-images/'+id+'.jpg',(err,done)=>{
+//   if(!err){
+    res.render("admin/add-coupon",{admin:true})
+
+  })
+})
+
+router.get('/cancel-order/:id',(req,res)=>{
+  let userId=req.params.id
+  productHelpers.cancelOrder(userId).then((response)=>{
+    res.redirect('/admin/orders')
+  })
+})
+
+router.get('/place-order/:id',(req,res)=>{
+  let userId=req.params.id
+  productHelpers.placeOrder(userId).then((response)=>{
+    res.redirect('/admin/orders')
+  })
+})
 module.exports = router;

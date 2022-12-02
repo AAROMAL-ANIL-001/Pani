@@ -23,6 +23,12 @@ module.exports={
             resolve(users)
         })
     },
+    getAllOrders:()=>{
+        return new Promise(async(resolve,reject)=>{
+            let orders = await db.get().collection(collection.ORDER_COLLECTION).find().toArray()
+            resolve(orders)
+        })
+    },
     deleteProduct:(proId)=>{
         return new Promise((resolve,reject)=>{
             db.get().collection(collection.PRODUCT_COLLECTION).deleteOne({_id:objectId(proId)}).then((response)=>{
@@ -82,5 +88,61 @@ module.exports={
                 resolve()
             })
         })
-    }
+    },
+    getMenProducts:()=>{
+        return new Promise(async(resolve,reject)=>{
+            let products = await db.get().collection(collection.PRODUCT_COLLECTION).find({Category:"Men"}).toArray()
+            resolve(products)
+        })
+    },
+    getWomenProducts:()=>{
+        return new Promise(async(resolve,reject)=>{
+            let products = await db.get().collection(collection.PRODUCT_COLLECTION).find({Category:"Women"}).toArray()
+            resolve(products)
+        })
+    },
+    getKidsProducts:()=>{
+        return new Promise(async(resolve,reject)=>{
+            let products = await db.get().collection(collection.PRODUCT_COLLECTION).find({Category:"Kids"}).toArray()
+            resolve(products)
+        })
+    },
+    addCoupon:(coupon,callback)=>{
+        console.log(coupon)
+        db.get().collection(collection.COUPON_COLLECTION).insertOne(coupon).then((data)=>{
+            callback(data.insertedId)
+    })
+    },
+    getCoupon:(couponDetails)=>{
+        return new Promise((resolve,reject)=>{
+            db.get().collection(collection.COUPON_COLLECTION).findOne({name:couponDetails.coupon})
+            .then((getCoupon)=>{
+                resolve(getCoupon)
+        })
+        })
+    },
+    cancelOrder:(userId)=>{
+        return new Promise((resolve,reject)=>{
+            db.get().collection(collection.ORDER_COLLECTION)
+            .updateOne({_id:objectId(userId)},{
+                $set:{
+                    status:"cancelled" 
+                }
+            }).then((response)=>{
+                resolve()
+            })
+        })
+    },
+    placeOrder:(userId)=>{
+        return new Promise((resolve,reject)=>{
+            db.get().collection(collection.ORDER_COLLECTION)
+            .updateOne({_id:objectId(userId)},{
+                $set:{
+                    status:"placed"
+                }
+            }).then((response)=>{
+                resolve()
+            })
+        })
+    },
 }
