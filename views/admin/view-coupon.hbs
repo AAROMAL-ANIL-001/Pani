@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+  	<link rel="stylesheet" href="https://cdn.datatables.net/1.12.1/css/jquery.dataTables.min.css">
+    <script src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js"></script>
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+  	<link rel="stylesheet" href="https://cdn.datatables.net/1.12.1/css/jquery.dataTables.min.css">
+    <script src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js"></script>
+</head>
+<body>
+  
+<section>
+    <div class="container p-5">
+        <div class="row">
+            <a href="/admin/add-coupon" class="btn btn-success ml-auto">Add Coupon</a>
+        </div>
+        <table class="table mt-5 " id="myTable">
+  <thead>
+    <tr>
+      <th scope="col">No</th>
+      <th scope="col">Name</th>
+      <th scope="col">Date</th>
+      <th scope="col">Min-value</th>
+      <th scope="col">Discount</th>
+      <th scope="col">Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    {{#each coupon}}
+    <tr>
+      <th scope="row">{{addOne @index}}</th>
+      <td>{{this.name}}</td>
+      <td>{{this.date}}</td>
+      <td>{{this.minvalue}}</td>
+      <td>Rs.{{this.Discount}} </td>
+      <td>
+        <a href="/admin/edit-product/{{this._id}}" class="btn btn-warning">Edit</a>
+        <a href="/admin/delete-product/{{this._id}}" class="btn btn-danger delete">Delete</a>
+      </td>
+    </tr>
+    {{/each}}
+  
+  </tbody>
+</table>
+    </div>
+</section>
+
+<script>
+  $(document).ready( function () {
+    $('#myTable').DataTable();
+} );
+</script>
+<script>
+  $(".delete").on("click",function(e){
+   e.preventDefault()
+   var self =$(this);
+   Swal.fire({
+  title: 'Are you sure?',
+  text: "You won't be able to revert this!",
+  icon: 'warning',
+  showCancelButton: true,
+  confirmButtonColor: '#3085d6',
+  cancelButtonColor: '#d33',
+  confirmButtonText: 'Yes, delete it!'
+}).then((result) => {
+  if (result.isConfirmed) {
+    location.href=self.attr("href")
+  }
+  })
+  })
+</script>
+</body>
+</html>
+  
+
+
+

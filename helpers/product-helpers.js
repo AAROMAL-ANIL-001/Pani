@@ -121,6 +121,12 @@ module.exports={
         })
         })
     },
+    getAllCoupons:()=>{
+        return new Promise(async(resolve,reject)=>{
+            let coupon = await db.get().collection(collection.COUPON_COLLECTION).find().toArray()
+            resolve(coupon)
+        })
+    },
     cancelOrder:(userId)=>{
         return new Promise((resolve,reject)=>{
             db.get().collection(collection.ORDER_COLLECTION)

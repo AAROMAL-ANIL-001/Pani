@@ -1,64 +1,69 @@
-var express = require("express");
-var router = express.Router();
-const productHelpers = require("../helpers/product-helpers");
-const userHelpers = require("../helpers/user-helpers");
-const userController = require("../controllers/userController")
-const fast2sms = require("fast-two-sms");
+const express = require('express');
+
+const router = express.Router();
+
+const productHelpers = require('../helpers/product-helpers');
+
+const userHelpers = require('../helpers/user-helpers');
+
+const userController = require('../controllers/userController');
+
+// const fast2sms = require('fast-two-sms');
+
 const verifyLogin = (req, res, next) => {
   if (req.session.userLoggedIn) {
     next();
   } else {
-    res.redirect("/login");
+    res.redirect('/login');
   }
 };
 
 /* GET home page. */
-router.get("/",userController.getHome);
+router.get('/', userController.getHome);
 
-router.get("/login", userController.getLogin);
+router.get('/login', userController.getLogin);
 
-router.get("/signup", userController.getSignup);
+router.get('/signup', userController.getSignup);
 
-router.post("/signup", userController.postSignup);
+router.post('/signup', userController.postSignup);
 
-router.get("/otp", userController.getOtp);
+router.get('/otp', userController.getOtp);
 
-router.post("/otp", userController.postOtp);
+router.post('/otp', userController.postOtp);
 
-router.post("/login", userController.postLogin);
+router.post('/login', userController.postLogin);
 
-router.get("/logout", userController.getLogout);
+router.get('/logout', userController.getLogout);
 
-router.get("/cart", verifyLogin, userController.cart);
+router.get('/cart', verifyLogin, userController.cart);
 
-router.get("/add-to-cart/:id", userController.addToCart);
+router.get('/add-to-cart/:id', userController.addToCart);
 
-router.post('/change-product-quantity',userController.changeProductQuantity)
+router.post('/change-product-quantity', userController.changeProductQuantity);
 
-router.get('/checkout',verifyLogin,userController.getCheckout)
+router.get('/checkout', verifyLogin, userController.getCheckout);
 
-router.post('/checkout',userController.postCheckout)
+router.post('/checkout', userController.postCheckout);
 
-router.get("/order-success",userController.orderSuccess)
+router.get('/order-success', userController.orderSuccess);
 
-router.get('/orders',userController.orders)
+router.get('/orders', userController.orders);
 
-router.get('/view-order-products/:id',userController.viewOrderProducts)
+router.get('/view-order-products/:id', userController.viewOrderProducts);
 
-router.post('/verify-payment',userController.verifyPayment)
+router.post('/verify-payment', userController.verifyPayment);
  
-router.get('/product-detail/:id', userController.productDetail) 
+router.get('/product-detail/:id', userController.productDetail);
 
-router.post('/remove-cart-product',userController.removeCartProduct)
+router.post('/remove-cart-product', userController.removeCartProduct);
 
-router.post('/remove-wish-product' ,(req, res) => {
+router.post('/remove-wish-product', (req, res) => {
   userHelpers.removeWishProduct(req.body).then((response) => {
     res.json(response);
   });
-}
-)
+});
 
-router.get('/men',async function (req, res, next) {
+router.get('/men', async function (req, res, next) {
   console.log("mennn");
   let user = req.session.user;
   console.log(user);
@@ -71,8 +76,7 @@ router.get('/men',async function (req, res, next) {
   productHelpers.getMenProducts().then((products) => {
     res.render("user/men", { products, user});
   });
-}
-)
+});
 
 router.get('/women',async function (req, res, next) {
   console.log("mennn");
@@ -121,6 +125,7 @@ router.post('/profile',(req,res)=>{
     req.session.user.Pincode=req.body.Pincode;
     req.session.user.Phone=req.body.Phone;
 
+    
     res.redirect('/profile')
   })
 })

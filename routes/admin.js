@@ -10,6 +10,14 @@ router.get("/", function (req, res, next) {
   // });
 
 });
+router.get('/demo',(req,res)=>{
+  res.render('admin/demo',
+  {
+    admin:true,
+    layout:"layout1"
+  }
+  )
+})
 router.get("/products", function (req, res, next) {
   if (req.session.admin) {
     productHelpers.getAllProducts().then((products) => {
@@ -138,11 +146,17 @@ productHelpers.addCoupon(req.body,(id)=>{
 
   })
 })
+router.get('/view-coupon',function(req,res){
+    productHelpers.getAllCoupons().then((coupon)=>{
+
+  res.render('admin/view-coupon',{admin:true,coupon})
+})
+ })
 
 router.get('/cancel-order/:id',(req,res)=>{
   let userId=req.params.id
   productHelpers.cancelOrder(userId).then((response)=>{
-    res.redirect('/admin/orders')
+
   })
 })
 
@@ -151,5 +165,16 @@ router.get('/place-order/:id',(req,res)=>{
   productHelpers.placeOrder(userId).then((response)=>{
     res.redirect('/admin/orders')
   })
+})
+
+router.get("/chart",async(req,res)=>{
+  let order=await productHelpers.getAllOrders().then((orders) => {
+    res.render("admin/demo.hbs", {
+      admin: true,
+      orders,
+      layout: "layout1",
+    });
+  // res.render("admin/demo")
+})
 })
 module.exports = router;
