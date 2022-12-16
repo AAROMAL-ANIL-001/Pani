@@ -2,62 +2,117 @@
 <div>
 <div class="container">
   <div class="row">
-    <div class="col-5">
+    <div class="col-6">
       <canvas id="myChart" width="40" height="40"></canvas>
     </div>
+    <div class="col-6">
+      <canvas id="userChart" ></canvas>
+    </div>
+    </div>
+    <div class="col-12">
+      <canvas id="salesChart" ></canvas>
+    </div>
   </div>
-  
+</div>
+</div>
 
-</div>
-</div>
+
+
 <script>
   // === include 'setup' then 'config' above ===
 const data = {
   labels: [
-  
     'MEN',
     'WOMEN',
-    'KIDS',
-   
+    'KIDS'
   ],
   datasets: [{
-    label: 'My First Dataset',
-    data: [20,60, 40],
-    fill: true,
-    backgroundColor: 'rgba(255, 99, 132, 0.2)',
-    borderColor: 'rgb(255, 99, 132)',
-    pointBackgroundColor: 'rgb(255, 99, 132)',
-    pointBorderColor: '#fff',
-    pointHoverBackgroundColor: '#fff',
-    pointHoverBorderColor: 'rgb(255, 99, 132)'
-  },
-   {
-    label: 'My Second Dataset',
-    data: [28, 48, 40, 19, 96, 27, 100],
-    fill: true,
-    backgroundColor: 'rgba(54, 162, 235, 0.2)',
-    borderColor: 'rgb(54, 162, 235)',
-    pointBackgroundColor: 'rgb(54, 162, 235)',
-    pointBorderColor: '#fff',
-    pointHoverBackgroundColor: '#fff',
-    pointHoverBorderColor: 'rgb(54, 162, 235)'
-  }
-  ]
+    label: 'SALES%',
+    data: [30, 50, 20],
+    backgroundColor: [
+      'rgb(255, 99, 132)',
+      'rgb(54, 162, 235)',
+      'rgb(255, 205, 86)'
+    ],
+    hoverOffset: 4
+  }]
 };
 
+
 const config = {
-  type: 'line',
+  type: 'doughnut',
   data: data,
-  options: {
-    elements: {
-      line: {
-        borderWidth: 3
-      }
-    }
-  },
 };
+
+
+
+/*const chart1 = new Chart(
+    document.getElementById("myChart1"),config
+  )*/
 
 const chart = new Chart(
     document.getElementById("myChart"),config
   )
+
+
+          // user datas
+          const orderData = {
+            labels: ["12-12","13-12","14-12","15-12"
+            ],
+            datasets: [
+              {
+                label: "Orders",
+                backgroundColor: "rgb(255, 99, 132)",
+                borderColor: "rgb(255, 99, 132)",
+                data: [0,10,12,10
+                ],
+              },
+            ],
+          };
+        
+          const configLineGraph = {
+            type: "line",
+            data: orderData,
+            options: {},
+          };
+        
+          const userChart = new Chart(
+            document.getElementById("userChart"),
+            configLineGraph
+          );
+        
+          //top5Products
+          const salesData = {
+            labels: [
+              "Shirts",
+              "saree",
+              "T-shirt",
+            ],
+            datasets: [
+              {
+                label: "Sales in last month",
+                data: [
+                  "40",
+                  "200",
+                  "98",
+                ],
+                backgroundColor: [
+                  "rgb(255, 99, 132)",
+                  "rgb(54, 162, 235)",
+                  "rgb(255, 205, 86)",
+                ],
+                hoverOffset: 4,
+              },
+            ],
+          };
+        
+          const configDoughnut = {
+            type: "bar",
+            data: salesData,
+          };
+          const salesChart = new Chart(
+            document.getElementById("salesChart"),
+            configDoughnut
+          );
+
 </script>

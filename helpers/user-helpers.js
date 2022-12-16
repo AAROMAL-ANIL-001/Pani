@@ -310,6 +310,18 @@ module.exports = {
          }
          db.get().collection(collection.ORDER_COLLECTION).insertOne(orderObj).then((response)=>{
           db.get().collection(collection.CART_COLLECTION).deleteOne({user:objectId(order.userId)})
+          let i=0
+                for(i=0;i<products.length;i++){
+                    db.get().collection(collection.PRODUCT_COLLECTION)
+                    .updateOne({_id:objectId(products[i].item)},{
+                        $inc:{
+                            Stock:-products[i].quantity,
+                            Sales:products[i].quantity
+                        }
+                    }).then((response)=>{
+                        
+                    })
+                }
           console.log("order id",response.insertedId._id);
           resolve(response.insertedId)
          })

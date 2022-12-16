@@ -151,4 +151,11 @@ module.exports={
             })
         })
     },
+    getSalesDetails:()=>{
+        return new Promise(async(resolve,reject)=>{
+          let products =await db.get().collection(collection.PRODUCT_COLLECTION)
+            .find().toArray()
+            resolve(products)
+        })
+    },
 }

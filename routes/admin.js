@@ -98,21 +98,23 @@ router.get("/delete-product/:id", (req, res) => {
 router.get("/edit-product/:id", async (req, res) => {
   let product = await productHelpers.getProductDetails(req.params.id);
   console.log(product);
-  res.render("admin/edit-product", { product, admin: true, layout: "layout1" });
+  res.render("admin/edit-product", { product, admin:true, layout: "layout1" });
 });
 router.post("/edit-product/:id", (req, res) => {
   console.log(req.params.id);
   let id = req.params.id;
-  productHelpers.updateProduct(req.params, req.body).then(() => {
+  productHelpers.updateProduct(req.params.id, req.body).then(() => {
     try {
       if (req.files.Image) {
-        let id = req.files.Image;
+        let image = req.files.Image;
         image.mv("./public/product-images/" + id + ".jpg");  
+        res.redirect("/admin/products",{ product, admin:true, layout: "layout1" });
       }
     } catch (err) {
       res.redirect("/admin");
     }
   }); 
+  
 });  
 
 router.get('/block-user/:id',(req,res)=>{
@@ -149,7 +151,7 @@ productHelpers.addCoupon(req.body,(id)=>{
 router.get('/view-coupon',function(req,res){
     productHelpers.getAllCoupons().then((coupon)=>{
 
-  res.render('admin/view-coupon',{admin:true,coupon})
+  res.render('admin/view-coupon',{admin:true,coupon,layout:"layout1"})
 })
  })
 
@@ -176,5 +178,10 @@ router.get("/chart",async(req,res)=>{
     });
   // res.render("admin/demo")
 })
+})
+router.get("/sales",(req,res)=>{
+  productHelpers.getSalesDetails().then((products)=>{
+    res.render('admin/sales',{layout:"layout1",products})
+  })
 })
 module.exports = router;
