@@ -521,7 +521,7 @@ addToWishlist:(proid,userId)=>{
 },
 getWishlistProducts:(userId)=>{
         return new Promise(async(resolve,reject)=>{
-                let cartItems=await db.get().collection(collection.WISHLIST_COLLECTION).aggregate([
+                let wishlistItems=await db.get().collection(collection.WISHLIST_COLLECTION).aggregate([
                   {
                      $match:{user:objectId(userId)}
                 },
@@ -551,8 +551,8 @@ getWishlistProducts:(userId)=>{
                 }
          
               ]).toArray()
-              console.log(cartItems)
-              resolve(cartItems)
+              console.log(wishlistItems)
+              resolve(wishlistItems)
 
         })
         

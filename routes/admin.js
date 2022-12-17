@@ -71,8 +71,11 @@ router.get("/orders", function (req, res, next) {
 });
 
 router.get("/add-product", function (req, res) {
-  res.render("admin/add-product", { admin: true, layout: "layout1" });
-});
+  productHelpers.getCategory().then((categories)=>{
+    res.render("admin/add-product", { admin: true, layout: "layout1" ,categories});
+  });
+  })
+  
 router.post("/add-product", (req, res) => {
   console.log(req.body);
   console.log(req.files.Image);
@@ -170,11 +173,15 @@ router.get('/place-order/:id',(req,res)=>{
 })
 
 router.get("/chart",async(req,res)=>{
+  let cod = await productHelpers.getCodCount()
+  let online = await productHelpers.getOnlineCount()
+  let orderCount= await productHelpers.getOrderCount()
+  let date = await productHelpers.getOrderDate()
   let order=await productHelpers.getAllOrders().then((orders) => {
     res.render("admin/demo.hbs", {
       admin: true,
       orders,
-      layout: "layout1",
+      layout: "layout1",cod,online,date,orderCount
     });
   // res.render("admin/demo")
 })
@@ -184,4 +191,101 @@ router.get("/sales",(req,res)=>{
     res.render('admin/sales',{layout:"layout1",products})
   })
 })
+
+router.get('/categories',(req,res)=>{
+  productHelpers.getCategory().then((categories)=>{
+    res.render('admin/categories',{categories,layout:"layout1"})
+  })
+})
+
+router.get('/add-category',(req,res)=>{
+  res.render('admin/add-category',{"categoryErr":req.session.categoryExist,layout:"layout1"})
+  req.session.categoryExist=false
+})
+
+router.post('/add-category',(req,res)=>{
+    let categoryData=req.body
+    productHelpers.addCategory(categoryData).then((response)=>{
+      if(response.status){
+        req.session.categoryExist="Category already exist"
+        res.redirect('/admin/add-category')
+        
+      }else{
+        res.redirect('/admin/categories')
+      }
+  })
+})
+
+router.get('/delete-category/:id',(req,res)=>{
+  let catId = req.params.id
+  productHelpers.deleteCategory(catId).then((response)=>{
+    res.redirect('/admin/categories')
+  })
+})
+
+router.get('/edit-category/:id',async(req,res)=>{
+ 
+  let category = await productHelpers.getCategoryDetails(req.params.id)
+
+  res.render('admin/edit-categories',{category,layout:"layout1"})
+})
+
+router.post('/edit-category/:id',(req,res)=>{
+  let catId = req.params.id
+  let catDetails = req.body
+  productHelpers.updateCategory(catId,catDetails).then((response)=>{
+    res.redirect('/admin/categories')
+  })
+})
+
+router.get('/add-banner',function(req,res){
+  productHelpers.getAllbanner().then((banner)=>{
+
+  res.render('admin/add-banner',{admin:true,banner})
+})
+})
+
+router.post('/add-banner',function(req, res) {
+  // console.log(req.body);
+  // console.log(req.files.banner);
+
+  productHelpers.addBanner(req.body).then((id) => {
+    console.log("Inserted Id : " + id);
+    let banner = req.files.banner;
+    try {
+      banner.mv('./public/product-images/'+id+'.jpg');
+      res.redirect("/admin/add-banner");
+    } catch (err) {
+      console.log(err);
+    }
+  });
+})
+router.get('/delete-banner/:id',(req,res)=>{
+  let catId = req.params.id
+  productHelper.deletebanner(catId).then((response)=>{
+    res.redirect('/admin/add-banner')
+  })
+})
+
+router.get('/delete-coupon/:id',(req,res)=>{
+
+  let coupId = req.params.id
+  productHelpers.deleteCoupon(coupId).then((response)=>{
+    res.redirect('/admin/view-coupon')
+  })
+})
+
+router.get('/edit-coupon/:id',async(req,res)=>{
+  let coupon = await productHelpers.getCouponDetails(req.params.id)
+  res.render('admin/edit-coupon',{layout:"layout1",coupon})
+})
+
+router.post('/edit-coupon/:id',(req,res)=>{
+  let coupId = req.params.id
+  let coupDetails = req.body
+  productHelpers.editCouponDetails(coupId,coupDetails).then((response)=>{
+    res.redirect('/admin/view-coupon')
+  })
+})
+
 module.exports = router;

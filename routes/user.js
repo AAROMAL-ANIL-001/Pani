@@ -201,7 +201,9 @@ router.get('/add-to-wishlist/:id',verifyLogin,(req,res)=>{
 }) 
  
 router.get('/wishlist',verifyLogin,async(req,res)=>{
+  
   let products=await userHelpers.getWishlistProducts(req.session.user._id)
+
   let totalValue=await userHelpers.getTotalAmount(req.session.user._id)
   console.log(products)
   res.render('user/wishlist',{products,user:req.session.user,totalValue})

@@ -22,13 +22,12 @@
   // === include 'setup' then 'config' above ===
 const data = {
   labels: [
-    'MEN',
-    'WOMEN',
-    'KIDS'
+    'COD',
+    'ONLINE'
   ],
   datasets: [{
     label: 'SALES%',
-    data: [30, 50, 20],
+    data: [{{cod}},{{online}}],
     backgroundColor: [
       'rgb(255, 99, 132)',
       'rgb(54, 162, 235)',
@@ -57,14 +56,17 @@ const chart = new Chart(
 
           // user datas
           const orderData = {
-            labels: ["12-12","13-12","14-12","15-12"
+            labels: [
+            {{#each date}}
+            '{{this}}',
+            {{/each}}
             ],
             datasets: [
               {
                 label: "Orders",
                 backgroundColor: "rgb(255, 99, 132)",
                 borderColor: "rgb(255, 99, 132)",
-                data: [0,10,12,10
+                data: [{{orderCount}}
                 ],
               },
             ],
@@ -82,37 +84,6 @@ const chart = new Chart(
           );
         
           //top5Products
-          const salesData = {
-            labels: [
-              "Shirts",
-              "saree",
-              "T-shirt",
-            ],
-            datasets: [
-              {
-                label: "Sales in last month",
-                data: [
-                  "40",
-                  "200",
-                  "98",
-                ],
-                backgroundColor: [
-                  "rgb(255, 99, 132)",
-                  "rgb(54, 162, 235)",
-                  "rgb(255, 205, 86)",
-                ],
-                hoverOffset: 4,
-              },
-            ],
-          };
-        
-          const configDoughnut = {
-            type: "bar",
-            data: salesData,
-          };
-          const salesChart = new Chart(
-            document.getElementById("salesChart"),
-            configDoughnut
-          );
+         
 
 </script>

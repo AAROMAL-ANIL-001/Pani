@@ -5,15 +5,11 @@ module.exports = {
   productDetail: (req, res) => {
     const id = req.params;
     console.log(id);
-    console.log(id);
-    console.log(id);
-    console.log(id);
-    console.log(id);
-    console.log(id);
+   
     productHelpers.getSingleProducts(id).then((product) => {
       console.log("ajshdgj");
       console.log(product);
-      res.render("user/product-detail", { product });
+      res.render("user/product-detail", { product,layout:"layout" });
     });
   },
   removeCartProduct: (req, res) => {
@@ -99,7 +95,7 @@ module.exports = {
 
     let cartCount = await userHelpers.getCartCount(req.session.user._id);
     const userId = users._id;
-    res.render("user/cart", { users, products, userId, totalValue, cartCount });
+    res.render("user/cart", { user:req.session.user, products, userId, totalValue, cartCount });
   },
   getLogout: (req, res) => {
     req.session.user = null;

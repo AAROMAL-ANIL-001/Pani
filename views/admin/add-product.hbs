@@ -12,9 +12,12 @@
                 
                 <select class="form-select" name="Category">
                     <option selected>Open this select menu</option>
-                    <option value="Men">Men</option>
-                    <option value="Women">Women</option>
-                    <option value="Kids">Kids</option>
+
+                    {{#each categories}}
+                    <option value="{{this.Category}}">{{this.Category}}</option>
+                    {{/each}}
+                    
+                    
                 </select>
 
                 <label for="">Price</label>
