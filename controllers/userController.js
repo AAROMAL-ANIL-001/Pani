@@ -10,7 +10,10 @@ module.exports = {
       console.log("ajshdgj");
       console.log(product);
       res.render("user/product-detail", { product,layout:"layout" });
-    });
+
+    }).catch(()=>{
+      res.render("error",{layout:false})
+    })
   },
   removeCartProduct: (req, res) => {
     userHelpers.removeCartProduct(req.body).then((response) => {
@@ -95,7 +98,8 @@ module.exports = {
 
     let cartCount = await userHelpers.getCartCount(req.session.user._id);
     const userId = users._id;
-    res.render("user/cart", { user:req.session.user, products, userId, totalValue, cartCount });
+    let banner = await productHelpers.getAllbanner(req.session.user._id);
+    res.render("user/cart", { user:req.session.user, products, userId, totalValue, cartCount,banner });
   },
   getLogout: (req, res) => {
     req.session.user = null;

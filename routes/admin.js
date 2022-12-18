@@ -172,6 +172,12 @@ router.get('/place-order/:id',(req,res)=>{
   })
 })
 
+router.get('/ship-order/:id',(req,res)=>{
+  let userId=req.params.id
+  productHelpers.shipOrder(userId).then((response)=>{
+    res.redirect('/admin/orders')
+  })
+})
 router.get("/chart",async(req,res)=>{
   let cod = await productHelpers.getCodCount()
   let online = await productHelpers.getOnlineCount()
@@ -241,7 +247,7 @@ router.post('/edit-category/:id',(req,res)=>{
 router.get('/add-banner',function(req,res){
   productHelpers.getAllbanner().then((banner)=>{
 
-  res.render('admin/add-banner',{admin:true,banner})
+  res.render('admin/add-banner',{admin:true,layout:"layout1",banner})
 })
 })
 
@@ -262,7 +268,7 @@ router.post('/add-banner',function(req, res) {
 })
 router.get('/delete-banner/:id',(req,res)=>{
   let catId = req.params.id
-  productHelper.deletebanner(catId).then((response)=>{
+  productHelpers.deletebanner(catId).then((response)=>{
     res.redirect('/admin/add-banner')
   })
 })

@@ -73,6 +73,8 @@ module.exports={
         return new Promise((resolve,reject)=>{
             db.get().collection(collection.PRODUCT_COLLECTION).findOne({_id:objectId(proId)}).then((product)=>{
                 resolve(product);
+            }).catch((err)=>{
+                reject(err)
             })
         })
     },
@@ -156,6 +158,18 @@ module.exports={
             .updateOne({_id:objectId(userId)},{
                 $set:{
                     status:"placed"
+                }
+            }).then((response)=>{
+                resolve()
+            })
+        })
+    },
+    shipOrder:(userId)=>{
+        return new Promise((resolve,reject)=>{
+            db.get().collection(collection.ORDER_COLLECTION)
+            .updateOne({_id:objectId(userId)},{
+                $set:{
+                    status:"shipped"
                 }
             }).then((response)=>{
                 resolve()
