@@ -11,7 +11,7 @@ module.exports={
         Category:product.Category,
         Price:product.Price,
         Description:product.Description,
-        Stock:product.Stock,
+        Stock:parseInt(product.Stock),
         Available:true
        }).then((data)=>{
         console.log(data)
